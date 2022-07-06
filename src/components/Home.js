@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -7,7 +6,7 @@ function Home() {
     <Container>
       <div>
         <h1>Home Page</h1>
-        <Link to="/login">Login Page</Link>
+        <Link to="/">Login Page</Link>
       </div>
     </Container>
   );

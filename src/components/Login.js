@@ -1,5 +1,3 @@
-import React from "react";
-
 import styled from "styled-components";
 
 export default function Login(props) {
@@ -8,7 +6,7 @@ export default function Login(props) {
     <Content>
       <CTA>
         <img src="./images/cta-logo-one.svg" alt="online available" />
-        <Button>GET ALL HERE</Button>
+        <a href="/login">Get all here</a>
         <p>
           Get Premier Access to New Release for an additional fee with a Disney+
           subscription. Hurry Up The Price Of Disney+ and the Disney Bundel will
@@ -69,22 +67,26 @@ const CTA = styled.div`
     width: 100%;
     height: 100%;
   }
-`
-
-const Button = styled.button`
-  width: 100%;
-  min-height: 15%;
-  border-radius: 10px;
-  text-align: center;
+  a{
+    display: flex;
+    width: 100%;
+    text-transform:uppercase;
+    min-height: 15%;
+   border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
   color:white;
   font-size: 20px;
   font-weight: bold;
   border: none;
-  letter-spacing: 2px;
+  letter-spacing: 10px;
   background-color: rgb(36,160,237);
   cursor: pointer;
   :hover{
     background-color: #0483ee;
-    
+    }
   }
-`;
+`
+
+
