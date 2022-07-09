@@ -21,6 +21,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+
 //Here we created login with google which is a promise to be reutrned
 //to us
 

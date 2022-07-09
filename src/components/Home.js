@@ -7,6 +7,7 @@ function Home() {
       <div>
         <h1>Home Page</h1>
         <Link to="/">Login Page</Link>
+        <button>Logout</button>
       </div>
     </Container>
   );

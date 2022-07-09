@@ -1,41 +1,46 @@
 import styled from "styled-components";
-import { auth, provider } from "../firebase";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "../firebase";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { selectUserName, selectUserEmail, selectUserPhoto, setUserLoginDetails } from "../features/user/userSlice";
-import { signInWithPopup } from "firebase/auth";
+import { selectUserName, selectUserPhoto, setUserLoginDetails, setUserSingOutDetails } from "../features/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 
 
 
 export default function NavBar() {
-
   const dispatch = useDispatch();
   const userName = useSelector(selectUserName);
-  const userEmail = useSelector(selectUserEmail);
   const userPhoto = useSelector(selectUserPhoto);
+  const navigate = useNavigate()
+  console.log(userName)
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        dispatch(setUserLoginDetails({
+          name: currentUser.displayName,
+          photo: currentUser.photoURL,
+
+        }))
+        console.log("User Loged in with all details")
+
+      }
+      else {
+        dispatch(setUserSingOutDetails())
+        console.log("Logedout")
+      }
+    })
+  }, [])
 
 
-
-  const signInWithGoogle = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log(result)
-        //we make a setter function to get data from the promise
-        setUser(result.user);
-      }).catch((error) => {
-        console.log(error);
-      });
-
-  };
-
-  //here we declare the getUser function
-  function setUser(user) {
-    dispatch(setUserLoginDetails({
-      name: user.displayName,
-      email: user.email,
-      photo: user.photoURL,
-    }))
+  const logOut = () => {
+    signOut(auth);
+    navigate("/")
   }
+
+
 
   return (
     <Container>
@@ -51,10 +56,14 @@ export default function NavBar() {
               <a href="/home"><img src="./images/movie-icon.svg" alt="icon" /><span>movie</span></a>
               <a href="/home"><img src="./images/series-icon.svg" alt="icon" /><span>series</span></a>
             </NavMenu>
-            <UserImg src={userPhoto} alt={userName} />
+            <User>
+              <UserName>{userName}</UserName>
+              <LogOutButton onClick={logOut}>LogOut</LogOutButton>
+              <UserImg src={userPhoto} alt={userName} />
+            </User>
           </>
           :
-          <LoginButton onClick={signInWithGoogle}>Login</LoginButton>
+          <></>
       }
 
     </Container>
@@ -62,6 +71,7 @@ export default function NavBar() {
 }
 
 const Container = styled.nav`
+  
   position: fixed;
   top:0;
   left: 0;
@@ -78,9 +88,7 @@ const Container = styled.nav`
     width:100px;
     
   }
-  @media screen and (max-width:768px){
-      
-  }
+  
 `
 const NavMenu = styled.div`
   display: flex;
@@ -102,32 +110,35 @@ const NavMenu = styled.div`
     color:rgb(249,249,249);
     font-size: 15px;
     letter-spacing: 2px;
-   
   }
+  
   @media screen and (max-width:768px){
     display: none;
   }
   
 `
 
-const LoginButton = styled.a`
-  text-align: center;
-  color:rgb(249,249,249);
-  background-color: black;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-right: 10px;
-  border: 1px solid white;
-  border-radius: 5px;
-  padding:16px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  &:hover{
-    background-color: white;
-    color:black;
-  }
-`
-const UserImg = styled.img`
-  height: 100%;
-`
 
+const UserImg = styled.img`
+  
+  height:100px;
+  width:100px;
+  border-radius: 500px;
+`
+const LogOutButton = styled.button`
+  height:50px;
+  width: 100px;
+  background-color: transparent;
+  color: rgb(249,249,249);
+  border: solid rgb(249,249,249);;
+  ;
+`
+const User = styled.div`
+    display: flex;
+    margin-right:25px;
+    align-items: center;
+    justify-content: center;
+`
+const UserName = styled.span`
+  margin: 25px;
+`
